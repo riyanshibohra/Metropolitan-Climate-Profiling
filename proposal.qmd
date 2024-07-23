@@ -1,0 +1,241 @@
+---
+title: "Metropolitan Climate Profiling: Advanced Analytics of Urban Heat Islands"
+subtitle: "Proposal"
+format: html
+editor: visual
+---
+
+## Project Objective
+
+The primary objective of this project is to study and analyze climatological data for three cities inside and outside of the Dallas, TX region, and to classify these cities based on an "Urban Heat Island" (UHI) scale.
+
+In climatology, UHI refers to cities that experience warmer temperatures than nearby rural areas, which occurs when land and natural vegetation are replaced by buildings, pavements, and surfaces that absorb and hold heat. This effect is also known as "micro climate" since a city's infrastructure is creating its own local weather conditions.
+
+By analyzing the micro climate data for Dallas, a major urban city in the country, and two suburban cities outside of Dallas---Denton and Arlington, we can create a classification system for different levels of intensities for UHIs and label these cities accordingly. Additionally, we will perform temporal analysis by comparing and contrasting various weather patterns for different heat intensities of UHIs.
+
+#### Scope and Focus
+
+This project will focus on assessing UHIs in various urban environments, particularly comparing the UHI intensity in the following settings:
+
+1.  [**Dallas (Significant City)**]{.underline}
+
+    Analyzing the UHI in a major metropolitan area with high population density and urbanization. Factors such as pollution, land use, and climate will be considered to determine the UHIs' intensity.
+
+2.  [**Arlington (Suburban Town)**]{.underline}
+
+    Evaluating the UHI in a suburban setting, with a moderate population density and less urban development than a significant city. This comparison will help us understand how UHIs vary in less densely populated areas.
+
+3.  [**Denton (Rural City)**]{.underline}
+
+    Examining the UHI in a rural city, where factors like lower population density, less pollution, and different land use patterns play a role in UHI intensity.
+
+## Dataset Description
+
+The high-level goal of this project is to detect, analyze, and understand **UHIs** by leveraging data mining and machine learning to understand the microclimatic effects of urbanization in various metropolitan landscapes.
+
+Climatological and hourly time-series data has been collected from several weather stations run by the National Weather Service (NWS), Federal Aviation Administration (FAA), and Department of Defense (DOD), which encompass data collected from airports and other significant areas. This data has been divided into three Local Climatological Datasets (LCD) for Arlington, Dallas, and Denton for the year 2022.
+
+The dataset that we've gathered from National Center for Environmental Information (NCEI) (<https://www.ncei.noaa.gov/>) offers these key hourly summaries that we will be analyzing:
+
+| Column Names                     | Description                                                                                                                                         | Data Type |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| DATE                             | Date of the observation (year, month and day) along with time of observation given as a 4-digit number using a 24-hour clock in local standard time | String    |
+| HourlyAverageDryBulbTemperature  | This is the dry-bulb temperature and is commonly used as the standard air temperature reported. It is given here in whole degrees Fahrenheit.       | Float     |
+| HourlyAverageWetBulbTemperature  | This is the wet-bulb temperature. It is given here in whole degrees Fahrenheit.                                                                     | Float     |
+| HourlyAverageDewPointTemperature | This is the dew point temperature. It is given here in whole degrees Fahrenheit.                                                                    | Float     |
+| HourlyPrecipitation              | Total Liquid Content (TLC) water equivalent amount of precipitation for the day.                                                                    | Float     |
+| HourlyAverageSeaLevelPressure    | Sea level pressure given in inches of Mercury (in Hg).                                                                                              | Float     |
+| HourlyAverageStationPressure     | Atmospheric pressure observed at the station during the time of observation. Given in inches of Mercury (in Hg).                                    | Float     |
+| HourlyAverageRelativeHumidity    | This is the relative humidity given to the nearest whole percentage.                                                                                | Float     |
+| HourlyAverageWindSpeed           | Speed of the wind at the time of observation given in miles per hour (mph).                                                                         | Float     |
+| HourlySustainedWindDirection     | Wind direction from true north using compass directions (e.g. 360 = true north, 180 = south, 270 = west, etc.).                                     | Float     |
+
+Additional data is included in the tabulated monthly summaries: maximum, minimum, and average temperatures; deviations from normal; ceiling height; visibility; weather patterns; heating and cooling degree days; fastest wind speeds and their directions; sky cover; and instances of sunshine, snowfall, and snow depth.
+
+## Three Datasets
+
+```{r}
+#| label: load-pkgs
+#| include: false
+#| message: false
+#| warning: false
+#| echo: false
+
+#install.packages("pacman")
+
+pacman::p_load(dlookr,
+               tidyverse,
+               here,
+               formattable,
+               knitr,
+               dplyr)
+
+# List of columns we will analyze:
+
+columns_to_extract <- c("HourlyAverageDryBulbTemperature",
+"HourlyAverageWetBulbTemperature",
+"HourlyAverageDewPointTemperature",
+"HourlyPrecipitation",
+"HourlyAverageSeaLevelPressure",
+"HourlyAverageStationPressure",
+"HourlyAverageRelativeHumidity",
+"HourlyAverageWindSpeed",
+"HourlySustainedWindDirection")
+```
+
+### 1.) Arlington Dataset
+
+```{r}
+#| label: arlington-dataset 
+#| echo: false 
+#| warning: false  
+
+arlington_data <- read_csv(here('./data/Arlington.csv'))
+
+cleaned_arlington <- arlington_data %>% select(-REM)
+
+# Dimensions of dataset:
+num_rows <- nrow(cleaned_arlington)
+num_columns <- ncol(cleaned_arlington)
+cat("(", num_rows, " rows x ", num_columns, " columns)", sep = "")
+
+cleaned_arlington |>
+  head(n = 5) |>
+  formattable()
+```
+
+### 2.) Dallas Dataset
+
+```{r}
+#| label: dallas-dataset 
+#| echo: false 
+#| warning: false  
+
+dallas_data <- read_csv(here('./data/Dallas.csv'))
+
+cleaned_dallas <- dallas_data %>% select(-REM)
+
+# Dimensions of dataset: 
+num_rows <- nrow(cleaned_dallas)
+num_columns <- ncol(cleaned_dallas)
+cat("(", num_rows, " rows x ", num_columns, " columns)", sep = "")
+
+cleaned_dallas |>
+  head(n = 5) |>
+  formattable()
+```
+
+### 3.) Denton Dataset
+
+```{r}
+#| label: denton-dataset 
+#| echo: false 
+#| warning: false  
+
+denton_data <- read_csv(here('./data/Denton.csv'))
+
+cleaned_denton <- denton_data %>% select(-REM)
+
+# Dimensions of dataset:
+num_rows <- nrow(cleaned_denton)
+num_columns <- ncol(cleaned_denton)
+
+cat("(", num_rows, " rows x ", num_columns, " columns)", sep = "")
+
+cleaned_denton |>
+  head(n = 5) |>
+  formattable()
+```
+
+## Questions
+
+1.  How does Urban Heat Island (UHI) intensity vary between urban and rural settings, such as Dallas, Arlington, and Denton, throughout a given year, and what methods can be employed to classify and interpret these varying intensity levels?
+
+    Explanation: This question highlights the investigation of variations in UHI intensity between metropolitan cities and rural areas such as Arlington, Dallas, and Denton. By classifying UHI intensity in terms of multi-class classification into levels, the aim is to develop an approach that provides a comprehensive understanding of how urban and rural environments influence these observed differences in a given year.
+
+2.  How can time series data visualizations effectively illustrate the variations in Urban Heat Island (UHI) intensity across metropolitan and rural areas like Arlington, Dallas, and Denton over a given year, highlighting the distinct temporal patterns of UHI levels?
+
+    Explanation: This question dives into the exploration of variations in the UHI intensity in metropolitan cities and rural areas like Arlington, Dallas and Denton throughout a specific year. Time series analysis will be used to uncover changes over seasons and highlight the levels of UHI. By employing techniques this investigation aims to provide an easy understanding of how UHI intensity changes over seasons identifying patterns that differentiate between urban heat impacts, in metropolitan and rural environments across the specified region.
+
+## Analysis Plan
+
+### Data Pre-Processing
+
+**Objective: Prepare the dataset for analysis by cleaning and structuring the data.**
+
+-   Merge datasets from different locations (Dallas, Arlington, Denton) into a unified format.
+-   Identify and handle missing values through imputation.
+-   Convert data types as necessary for consistency.
+-   Normalize and standardize data to ensure comparability.
+
+### EDA (Exploratory Data Analysis)
+
+**Objective: Gain initial insights into the dataset and identify patterns.**
+
+-   Visualize key metrics such as temperature, humidity, and wind patterns.
+
+-   Identify initial trends and seasonal variations.
+
+-   Perform basic statistical analyses to understand data distributions.
+
+### Feature Engineering
+
+**Objective: Enhance the dataset with additional relevant features for analysis.**
+
+-   Performing feature selection by selecting relevant features for the modeling phase.
+
+-   Develop a new feature for the classification task that defines the level of UHI intensity (High, Medium, Low). This feature will be derived based on specific conditions and thresholds of key parameters like temperature, humidity, wind speed, etc.
+
+-   Create new features that could influence UHI intensity, such as time of day, day of the week, and season.
+
+### Temporal Analysis
+
+**Objective: Analyze UHI intensity over time to identify trends and anomalies.**
+
+-   Conduct time series analysis to explore how UHI intensity changes over various time frames (hourly, daily, seasonally, annually).
+
+-   Identify peak periods of UHI intensity and investigate the underlying factors contributing to these peaks.
+
+-   Compare temporal patterns across different locations (urban vs. rural) to understand how geographical factors influence UHI intensity.
+
+### Model Development and Evaluation
+
+**Objective: Develop and assess models that classify and predict UHI intensity.**
+
+-   Build classification models to distinguish between various UHI intensity levels.
+
+-   Optimize models using techniques like cross-validation.
+
+-   Evaluate models using appropriate metrics (accuracy, precision, recall, etc.).
+
+### Insight Generation and Recommendations
+
+**Objective: Derive actionable insights and provide recommendations**
+
+Analyze model results to understand the key effects of UHI intensity.
+
+### Reporting
+
+-   Compile all reports and visualizations into one report, then prepare and deliver the final presentation on our results and overall UHI assessments.
+
+|     |
+|:---:|
+|     |
+
+## Organization of the Project Repository
+
+Below are the key folders within the Project repository:
+
+-   **data/**: This directory is designated for essential data files required for the project, including input files.
+
+-   **images/**: This folder serves as the storage location for project-related visual representations and plots.
+
+-   **presentation_files/**: This folder is specifically reserved for materials relevant to project presentations.
+
+-   **\_extra/**: We will brainstorm and store analysis-related content that doesn't directly affect the project workflow.
+
+-   **\_freeze/**: This folder stores the generated files during the build process, preserving the website's specific state at a given moment.
+
+-   **\_site/**: This is where we will generate our static website files after rendering our Quarto documents.
+
+-   **.github/**: This is where we will access and manage GitHub templates and workflow configurations.
