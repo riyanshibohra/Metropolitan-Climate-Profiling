@@ -14,23 +14,27 @@ This project seeks to enhance our understanding of how urbanization influences l
 
 ## Key Features
 
-**Seamless Data Integration**: Combined diverse climatological datasets from multiple cities into a unified, analyzable format.
+**1. Seamless Data Integration**: Combined diverse climatological datasets from multiple cities into a unified, analyzable format.
 
-**Exploratory Data Analysis (EDA)**: Illuminated seasonal trends, anomalies, and urban-rural climatic differences through vivid visualizations.
+**2. Exploratory Data Analysis (EDA)**: Illuminated seasonal trends, anomalies, and urban-rural climatic differences through vivid visualizations.
 
-**Feature Engineering**: Crafted unique features such as seasonal quartiles and daytime-nighttime temperature differences to enrich the dataset and improve model accuracy.
+**3. Feature Engineering**: Crafted unique features such as seasonal quartiles and daytime-nighttime temperature differences to enrich the dataset and improve model accuracy.
 
-**Time Series Analysis**: Employed ANOVA and other statistical techniques to dissect temporal impacts on UHI intensity.
+**4. Time Series Analysis**: Employed ANOVA and other statistical techniques to dissect temporal impacts on UHI intensity.
 
-**Classification Models**: Developed and fine-tuned multiple machine learning models to classify UHI intensity with high precision.
+**5. Classification Models**: Developed and fine-tuned multiple machine learning models to classify UHI intensity with high precision.
 
 
 ## Technologies Employed
 
-**Programming Languages**: Python
-**Data Analysis & Visualization**: Pandas, NumPy, SciPy, Matplotlib, Seaborn
-**Machine Learning**: Scikit-learn, XGBoost
-**Development Environment**: Jupyter Notebook
+- **Programming Languages**: Python
+
+- **Data Analysis & Visualization**: Pandas, NumPy, SciPy, Matplotlib, Seaborn
+
+- **Machine Learning**: Scikit-learn, XGBoost
+
+- **Development Environment**: Jupyter Notebook
+
 
 ## Repository Structure
 
