@@ -12,31 +12,41 @@ By scrutinizing micro climate data for Dallas, a major urban hub, along with Den
 
 This project seeks to enhance our understanding of how urbanization influences local climates, particularly in the context of the Dallas area, and contribute valuable insights into the classification and temporal patterns of Urban Heat Islands.
 
+## Key Features
+
+**Seamless Data Integration**: Combined diverse climatological datasets from multiple cities into a unified, analyzable format.
+
+**Exploratory Data Analysis (EDA)**: Illuminated seasonal trends, anomalies, and urban-rural climatic differences through vivid visualizations.
+
+**Feature Engineering**: Crafted unique features such as seasonal quartiles and daytime-nighttime temperature differences to enrich the dataset and improve model accuracy.
+
+**Time Series Analysis**: Employed ANOVA and other statistical techniques to dissect temporal impacts on UHI intensity.
+
+**Classification Models**: Developed and fine-tuned multiple machine learning models to classify UHI intensity with high precision.
+
+
+## Technologies Employed
+
+**Programming Languages**: Python
+**Data Analysis & Visualization**: Pandas, NumPy, SciPy, Matplotlib, Seaborn
+**Machine Learning**: Scikit-learn, XGBoost
+**Development Environment**: Jupyter Notebook
+
 ## Repository Structure
 
-- **`_extra`**: Explore code, notes, and other files used during experimentation. Note that the contents of this folder are not part of the final project output.
+- **`README.md`**: This file serves as documentation for the project and is the first point of reference for information.
 
 - **`data/`**: Discover data files or datasets used in the project.
 
     - `README.md`: Detailed information about the datasets can be found in this readme file.
+    
+- **`code/`**: Jupyter notebook documenting the step-by-step analysis, feature engineering, and model development.    
 
-- **`images`**: Access image files used in the project, such as illustrations, diagrams, or visual assets.
+- **`images`**: Access image files used in the project, such as illustrations, diagrams, or visual assets. Also contains EDA and result visualizations.
 
-- **`.gitignore`**: View this file to see which files or directories are ignored by version control.
-
-- **`README.md`**: This file serves as documentation for the project and is the first point of reference for information.
-
-- **`_quarto.yml`**: Check this likely configuration file.
-
-- **`about.qmd`**: Find team member information in this Quarto document.
-
-- **`index.qmd`**: Access the approach, analysis, and results of the project in this Quarto document.
-
-- **`presentation.qmd`**: This Quarto document contains slides for the project presentation.
+- **`project presentation.pdf`**: This document contains slides for the project presentation.
 
 - **`proposal.qmd`**: Explore the project proposal in this Quarto document.
-
-- **`project-final.Rproj`**: This RStudio project file organizes R-related files and settings for the project.
 
 #### Disclosure:
 
