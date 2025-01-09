@@ -60,6 +60,6 @@ This project seeks to enhance our understanding of how urbanization influences l
 
 - **`models/`**: Saved machine learning models.
 
-#### Disclosure:
+#### Note:
 
 The dataset is gathered from National Center for Environmental Information (NCEI) (<https://www.ncei.noaa.gov/>).
