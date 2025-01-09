@@ -1,4 +1,3 @@
-
 ## Metropolitan Climate Profiling: Advanced Analytics of Urban Heat Islands
 
 ![UHI Title](./images/UHI_Title.png)
@@ -20,8 +19,6 @@ This project seeks to enhance our understanding of how urbanization influences l
 
 **3. Feature Engineering**: Crafted unique features such as seasonal quartiles and daytime-nighttime temperature differences to enrich the dataset and improve model accuracy.
 
-**4. Time Series Analysis**: Employed ANOVA and other statistical techniques to dissect temporal impacts on UHI intensity.
-
 **5. Classification Models**: Developed and fine-tuned multiple machine learning models to classify UHI intensity with high precision.
 
 
@@ -38,19 +35,30 @@ This project seeks to enhance our understanding of how urbanization influences l
 
 ## Repository Structure
 
-- **`README.md`**: This file serves as documentation for the project and is the first point of reference for information.
+- **`README.md`**: Project documentation and overview.
 
-- **`data/`**: Discover data files or datasets used in the project.
+- **`data/`**: Contains raw and processed climate data files.
+    - Raw data files (`Dallas.csv`, `Arlington.csv`, `Denton.csv`)
+    - Processed data files (`processed_dallas.csv`, `processed_arlington.csv`, `processed_denton.csv`)
+    - Enhanced data files (`enhanced_dallas_with_uhi.csv`, `enhanced_arlington_with_uhi.csv`, `enhanced_denton_with_uhi.csv`)
+    - `README.md`: Documentation about the datasets and data processing steps
 
-    - `README.md`: Detailed information about the datasets can be found in this readme file.
-    
-- **`code/`**: Jupyter notebook documenting the step-by-step analysis, feature engineering, and model development.    
+- **`scripts/`**: Core Python modules for the project.
+    - `data_loader.py`: Functions for loading and saving datasets
+    - `preprocessing.py`: Data preprocessing and feature engineering
+    - `eda.py`: Exploratory data analysis functions
+    - `modeling.py`: Machine learning model training and evaluation
+    - `feature_engineering.py`: Feature creation and transformation
 
-- **`images`**: Access image files used in the project, such as illustrations, diagrams, or visual assets. Also contains EDA and result visualizations.
+- **`notebooks/`**: Jupyter notebooks for analysis and visualization.
+    - `eda.ipynb`: Exploratory Data Analysis
+    - `preprocessing.ipynb`: Data preprocessing steps
+    - `feature_engineering.ipynb`: Feature engineering process
+    - `modeling.ipynb`: Model development and evaluation
 
-- **`project presentation.pdf`**: This document contains slides for the project presentation.
+- **`images/`**: Project images for README.md
 
-- **`proposal.qmd`**: Explore the project proposal in this Quarto document.
+- **`models/`**: Saved machine learning models.
 
 #### Disclosure:
 
