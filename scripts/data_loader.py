@@ -1,30 +1,48 @@
 import pandas as pd
+import os
 
-def load_dataset(url, columns_of_interest=None, date_column=None):
+def get_project_root():
+    """Get the path to the project root directory."""
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+def load_dataset(city="Dallas"):
     """
-    Loads a dataset from a given URL.
-
-    Parameters:
-        url (str): The URL to the dataset.
-        columns_of_interest (list, optional): List of columns to keep. Default is None (keeps all columns).
-        date_column (str, optional): Name of the column to parse as datetime. Default is None.
-
-    Returns:
-        pd.DataFrame: The loaded dataset.
-    """
-    # Load the dataset
-    df = pd.read_csv(url, header='infer', low_memory=False)
+    Load a city's climate data.
     
-    # Convert the date column to datetime
-    if date_column:
-        df[date_column] = pd.to_datetime(df[date_column])
+    Args:
+        city (str): Name of the city (Dallas, Arlington, or Denton)
+    """
+    data_path = os.path.join(get_project_root(), 'data', f'{city}.csv')
+    return pd.read_csv(data_path)
 
-    # Select columns of interest
+def load_raw_dataset(file_path, columns_of_interest=None, date_column=None):
+    df = pd.read_csv(file_path)
     if columns_of_interest:
         df = df[columns_of_interest]
-
-    print(f"Loaded dataset from {url}")
-    print(f"Shape of the dataset: {df.shape}")
-    print(f"Missing values:\n{df.isnull().sum()}")
-
+    if date_column:
+        df[date_column] = pd.to_datetime(df[date_column])
     return df
+
+def load_processed_dataset(file_path):
+    if file_path.endswith('.csv'):
+        return pd.read_csv(file_path)
+    elif file_path.endswith('.pkl'):
+        return pd.read_pickle(file_path)
+    elif file_path.endswith('.parquet'):
+        return pd.read_parquet(file_path)
+    else:
+        raise ValueError("Unsupported file format. Use .csv, .pkl, or .parquet.")
+
+def save_dataset(df, file_path):
+    """
+    Saves a DataFrame to a file. Supports .csv, .pkl, and .parquet formats.
+    """
+    file_path = str(file_path)  # Convert Path object to string
+    if file_path.endswith('.csv'):
+        df.to_csv(file_path, index=False)
+    elif file_path.endswith('.pkl'):
+        df.to_pickle(file_path)
+    elif file_path.endswith('.parquet'):
+        df.to_parquet(file_path, index=False)
+    else:
+        raise ValueError("Unsupported file format. Use .csv, .pkl, or .parquet.")
