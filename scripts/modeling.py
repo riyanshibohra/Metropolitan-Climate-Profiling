@@ -1,74 +1,81 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.tree import DecisionTreeClassifier
-from xgboost import XGBClassifier
-from sklearn.svm import SVC
+from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
-import matplotlib.pyplot as plt
-import seaborn as sns
+import joblib
 
-
-def split_data(df, feature_columns, target_column, test_size=0.3, random_state=42):
+# Data preparation
+def prepare_data(df, target_column='UHI Intensity'):
     """
-    Splits the dataset into training and testing sets.
-
-    Parameters:
-        df (pd.DataFrame): The dataset.
-        feature_columns (list): List of feature columns.
-        target_column (str): Target column.
-        test_size (float): Proportion of the dataset to include in the test split.
-        random_state (int): Random state for reproducibility.
-
+    Prepares the dataset for modeling by splitting into features and target and encoding the target.
+    
+    Args:
+        df (pd.DataFrame): Input DataFrame
+        target_column (str): Name of the target column
+        
     Returns:
-        tuple: X_train, X_test, y_train, y_test
+        tuple: (X_train, X_test, y_train, y_test, label_encoder)
     """
-    X = df[feature_columns]
+    # Make a copy to avoid modifying the original data
+    df = df.copy()
+    
+    # Convert all numeric columns to float
+    numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
+    df[numeric_columns] = df[numeric_columns].astype(float)
+    
+    # Drop any non-numeric columns except target and Season
+    non_numeric_cols = df.select_dtypes(exclude=['int64', 'float64']).columns
+    cols_to_drop = [col for col in non_numeric_cols if col not in [target_column, 'Season']]
+    if cols_to_drop:
+        df = df.drop(columns=cols_to_drop)
+    
+    # Prepare features and target
+    X = df.drop(columns=[target_column, 'Season'])
     y = df[target_column]
-    return train_test_split(X, y, test_size=test_size, random_state=random_state)
+    
+    # Print data info for debugging
+    print("Features shape:", X.shape)
+    print("Features dtypes:\n", X.dtypes)
+    print("Target unique values:", y.unique())
+    
+    # Encode the target variable
+    label_encoder = LabelEncoder()
+    y_encoded = label_encoder.fit_transform(y)
+    
+    # Train-test split
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y_encoded, 
+        test_size=0.3, 
+        random_state=42,
+        stratify=y_encoded  # Ensure balanced split
+    )
+    
+    return X_train, X_test, y_train, y_test, label_encoder
 
-
-def train_and_evaluate_model(model, X_train, X_test, y_train, y_test, model_name):
+# Train a model
+def train_model(model, X_train, y_train):
     """
-    Trains a model and evaluates it on the test set.
-
-    Parameters:
-        model: The model to train.
-        X_train, X_test, y_train, y_test: Training and testing data.
-        model_name (str): Name of the model (for print statements).
-
-    Returns:
-        model: The trained model.
+    Trains a machine learning model.
     """
     model.fit(X_train, y_train)
-    predictions = model.predict(X_test)
-    print(f"Classification Report for {model_name}:\n")
-    print(classification_report(y_test, predictions))
-
-    cm = confusion_matrix(y_test, predictions)
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    plt.title(f'Confusion Matrix for {model_name}')
-    plt.xlabel('Predicted Label')
-    plt.ylabel('True Label')
-    plt.show()
-
     return model
 
-
-def compare_models(models, X_train, X_test, y_train, y_test):
+# Evaluate a model
+def evaluate_model(model, X_test, y_test, label_encoder):
     """
-    Trains and evaluates multiple models, comparing their performance.
-
-    Parameters:
-        models (dict): Dictionary of models with model names as keys.
-        X_train, X_test, y_train, y_test: Training and testing data.
-
-    Returns:
-        dict: Dictionary of trained models.
+    Evaluates the model on the test set and prints classification metrics.
     """
-    trained_models = {}
-    for model_name, model in models.items():
-        print(f"Training and evaluating {model_name}...")
-        trained_models[model_name] = train_and_evaluate_model(model, X_train, X_test, y_train, y_test, model_name)
-    
-    return trained_models
+    y_pred = model.predict(X_test)
+    y_test_decoded = label_encoder.inverse_transform(y_test)
+    y_pred_decoded = label_encoder.inverse_transform(y_pred)
+
+    print("Classification Report:\n", classification_report(y_test_decoded, y_pred_decoded))
+    print("\nConfusion Matrix:\n", confusion_matrix(y_test_decoded, y_pred_decoded))
+
+# Save the best model
+def save_model(model, file_path):
+    """
+    Saves the trained model to a file.
+    """
+    joblib.dump(model, file_path)
+    print(f"Model saved to {file_path}")
