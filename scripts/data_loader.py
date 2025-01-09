@@ -24,6 +24,18 @@ def load_raw_dataset(file_path, columns_of_interest=None, date_column=None):
     return df
 
 def load_processed_dataset(file_path):
+    """
+    Load a processed dataset from a file.
+    
+    Args:
+        file_path (str or Path): Path to the dataset file
+        
+    Returns:
+        pd.DataFrame: The loaded dataset
+    """
+    # Convert Path object to string if necessary
+    file_path = str(file_path)
+    
     if file_path.endswith('.csv'):
         return pd.read_csv(file_path)
     elif file_path.endswith('.pkl'):
